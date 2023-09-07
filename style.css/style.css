@@ -1,0 +1,9 @@
+html.light {
+    --color-bg: #fff;
+    --color-text: #000;
+}
+
+html.light {
+    --color-bg: #000;
+    --color-text: #fff;
+}

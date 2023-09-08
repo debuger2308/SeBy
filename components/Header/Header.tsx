@@ -7,12 +7,12 @@ import { usePathname } from "next/navigation"
 import "./Header.css"
 import { Dancing_Script } from 'next/font/google';
 
-const DancingScript = Dancing_Script({ subsets: ['latin'], weight:'700' })
+const DancingScript = Dancing_Script({ subsets: ['latin'], weight: '700' })
 const Header = () => {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
     const pathname = usePathname()
-    
+    const [isBurgMenuActive, setIsBurgMenuActive] = useState(false)
     useEffect(() => {
         setMounted(true)
     }, [])
@@ -20,6 +20,7 @@ const Header = () => {
     if (!mounted) {
         return null
     }
+    window.addEventListener('resize', () => { setIsBurgMenuActive(false) })
     return (
         <header>
             <div className="container">
@@ -28,7 +29,7 @@ const Header = () => {
                         SeBy
                     </Link>
 
-                    <aside className="header__aside">
+                    <aside className={isBurgMenuActive ? "header__aside header__aside--active" : "header__aside"}>
 
 
                         <Link href="/auth" className={pathname === "/auth" ? 'header__aside-link header__aside-link--active' : "header__aside-link"}>
@@ -132,8 +133,23 @@ const Header = () => {
 
                         </div>
                     </aside>
+                    <button
+                        onClick={() => {
+                            isBurgMenuActive ? setIsBurgMenuActive(false) : setIsBurgMenuActive(true)
+                        }}
+
+                        className='header__burger-btn'>
+                        <span className='header__burger-span'></span>
+                    </button>
                 </div>
             </div>
+            <div
+                style={isBurgMenuActive ? { display: "block" } : { display: "none" }}
+                onClick={(e) => {
+                    isBurgMenuActive && setIsBurgMenuActive(false)
+                    
+                }}
+                className="blur"></div>
         </header>
     );
 }

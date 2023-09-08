@@ -3,7 +3,7 @@ import { useTheme } from 'next-themes'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from "next/navigation"
-// import { DancingScript } from '@/app/layout';
+import { DancingScript } from '@/app/layout';
 import "./Header.css"
 
 const Header = () => {
@@ -22,7 +22,7 @@ const Header = () => {
         <header>
             <div className="container">
                 <div className="header">
-                    <Link href="/" className={pathname === "/" ? "header__logo header__logo--active" : "header__logo"}>
+                    <Link href="/" style={DancingScript.style} className={pathname === "/" ? "header__logo header__logo--active" : "header__logo"}>
                         SeBy
                     </Link>
 

@@ -7,7 +7,7 @@ import "./reset.css"
 import "./global.css"
 
 const nunito = Nunito({ subsets: ['latin'] })
-export const DancingScript = Dancing_Script({ subsets: ['latin'], weight:'700' })
+// export const DancingScript = Dancing_Script({ subsets: ['latin'], weight:'700' })
 
 export const metadata: Metadata = {
     title: 'Create Next App',

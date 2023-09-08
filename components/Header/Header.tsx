@@ -3,9 +3,11 @@ import { useTheme } from 'next-themes'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from "next/navigation"
-import { DancingScript } from '@/app/layout';
-import "./Header.css"
 
+import "./Header.css"
+import { Dancing_Script } from 'next/font/google';
+
+const DancingScript = Dancing_Script({ subsets: ['latin'], weight:'700' })
 const Header = () => {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false)

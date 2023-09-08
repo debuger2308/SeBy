@@ -1,13 +1,13 @@
 
 import type { Metadata } from 'next'
-import { Nunito, Dancing_Script } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 import { Providers } from './providers'
 import Header from '@/components/Header/Header'
 import "./reset.css"
 import "./global.css"
 
 const nunito = Nunito({ subsets: ['latin'] })
-export const DancingScript = Dancing_Script({ subsets: ['latin'], weight:'700' })
+
 
 export const metadata: Metadata = {
     title: 'Create Next App',

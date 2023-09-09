@@ -10,10 +10,11 @@ import { cookies } from 'next/headers'
 
 const nunito = Nunito({ subsets: ['latin'] })
 
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
     title: 'SeBy',
-    description: 'Торговая площадка',
+    description: 'Сервіс оголошень України. Купівля/Продаж.',
 }
 
 

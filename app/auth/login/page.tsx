@@ -33,7 +33,8 @@ const Login = () => {
             password: formData.password,
         })
         if (error) {
-            setLogInMessage(error.message)
+            if (error.message = 'Invalid login credentials') setLogInMessage('Користувача не знайдено')
+
         }
         else {
             router.refresh()
@@ -45,7 +46,7 @@ const Login = () => {
         <main>
             <div className="container">
                 <div className="main__login">
-                    <h1 className="login__title">Вхид</h1>
+                    <h1 className="login__title">Вхід</h1>
                     <form onSubmit={handleSubmit(onSubmit)} className="login__form">
                         <input
                             autoComplete="off"
@@ -54,7 +55,7 @@ const Login = () => {
                             className="auth-input login__input"
                             required
                             {...register('email', {
-                                required: "Обовязкове поле",
+                                required: "Обов`язкове поле",
                             })}
                         />
                         <strong className="login__error-msg">{errors?.email?.message?.toString()}</strong>
@@ -64,19 +65,19 @@ const Login = () => {
                             placeholder="Пароль"
                             className="auth-input login__input"
                             {...register('password', {
-                                required: "Обовязкове поле",
+                                required: "Обов`язкове поле",
                             })}
                         />
                         <strong className="login__error-msg">{errors?.password?.message?.toString()}</strong>
                         <button type="submit" disabled={!isValid} className="login__sibmit-btn">
                             <span className={isLoadData ? "loader loader--active login__loader" : "loader login__loader"}></span>
-                            Увийты
+                            Увійти
                         </button>
                         <strong className="login__error-msg">{logInMessage}</strong>
                     </form>
 
                     <Link className="login__link-signup" href="/auth/signup">
-                        Нема акавунта?
+                        Немає аккаунта?
                         <svg
                             className="login__link-arrow"
                             xmlns="http://www.w3.org/2000/svg"

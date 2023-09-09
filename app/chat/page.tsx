@@ -1,7 +1,9 @@
 
 const Chat = () => {
     return ( 
-        <></>
+        <main>
+            
+        </main>
      );
 }
  

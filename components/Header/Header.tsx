@@ -7,8 +7,10 @@ import { usePathname } from "next/navigation"
 import "./Header.css"
 import { Dancing_Script } from 'next/font/google';
 
+import type { Session } from '@supabase/auth-helpers-nextjs'
+
 const DancingScript = Dancing_Script({ subsets: ['latin'], weight: '700' })
-const Header = () => {
+const Header = ({ session }: { session: Session | null }) => {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
     const pathname = usePathname()
@@ -32,7 +34,12 @@ const Header = () => {
                     <aside className={isBurgMenuActive ? "header__aside header__aside--active" : "header__aside"}>
 
 
-                        <Link href="/auth/login" className={pathname === "/auth/login" || pathname === "/auth/signup" ? 'header__aside-link header__aside-link--active' : "header__aside-link"}>
+                        <Link href="/auth/login"
+                         className={pathname === "/auth/login" 
+                         || pathname === "/auth/signup" 
+                         || pathname === "/account" 
+                         ? 'header__aside-link header__aside-link--active' 
+                         : "header__aside-link"}>
                             <svg className='header__aside-svg' viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                     <style dangerouslySetInnerHTML={{ __html: ".cls-1{fill:none;}" }} />
@@ -49,19 +56,21 @@ const Header = () => {
                             </svg>
                             Аккаунт
                         </Link>
-                        <Link href="/chat" className={pathname === "/chat" ? "header__aside-link header__aside-link--active" : "header__aside-link"}>
-                            <svg className='header__aside-svg'
-                                data-name="Livello 1"
-                                id="Livello_1"
-                                viewBox="0 0 128 128"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <title />
-                                <path d="M116.73,31.83a3,3,0,0,0-4.2-.61L64.14,67.34a1,1,0,0,1-1.2,0L15.5,31.06a3,3,0,1,0-3.64,4.77L49.16,64.36,12.27,92.16A3,3,0,1,0,15.88,97L54.11,68.14l5.18,4a7,7,0,0,0,8.43.06l5.44-4.06L111.84,97a3,3,0,1,0,3.59-4.81L78.17,64.35,116.12,36A3,3,0,0,0,116.73,31.83Z" />
-                                <path d="M113,19H15A15,15,0,0,0,0,34V94a15,15,0,0,0,15,15h98a15,15,0,0,0,15-15V34A15,15,0,0,0,113,19Zm9,75a9,9,0,0,1-9,9H15a9,9,0,0,1-9-9V34a9,9,0,0,1,9-9h98a9,9,0,0,1,9,9Z" />
-                            </svg>
-                            Повидомлення
-                        </Link>
+                        {session &&
+                            <Link href="/chat" className={pathname === "/chat" ? "header__aside-link header__aside-link--active" : "header__aside-link"}>
+                                <svg className='header__aside-svg'
+                                    data-name="Livello 1"
+                                    id="Livello_1"
+                                    viewBox="0 0 128 128"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <title />
+                                    <path d="M116.73,31.83a3,3,0,0,0-4.2-.61L64.14,67.34a1,1,0,0,1-1.2,0L15.5,31.06a3,3,0,1,0-3.64,4.77L49.16,64.36,12.27,92.16A3,3,0,1,0,15.88,97L54.11,68.14l5.18,4a7,7,0,0,0,8.43.06l5.44-4.06L111.84,97a3,3,0,1,0,3.59-4.81L78.17,64.35,116.12,36A3,3,0,0,0,116.73,31.83Z" />
+                                    <path d="M113,19H15A15,15,0,0,0,0,34V94a15,15,0,0,0,15,15h98a15,15,0,0,0,15-15V34A15,15,0,0,0,113,19Zm9,75a9,9,0,0,1-9,9H15a9,9,0,0,1-9-9V34a9,9,0,0,1,9-9h98a9,9,0,0,1,9,9Z" />
+                                </svg>
+                                Повідомлення
+                            </Link>
+                        }
 
                         <div className="header__color-theme">
                             <button
@@ -147,7 +156,7 @@ const Header = () => {
                 style={isBurgMenuActive ? { display: "block" } : { display: "none" }}
                 onClick={(e) => {
                     isBurgMenuActive && setIsBurgMenuActive(false)
-                    
+
                 }}
                 className="blur"></div>
         </header>

@@ -33,7 +33,7 @@ const SighUp = () => {
 
     const onSubmit: SubmitHandler<FormValues> = async (formData) => {
         setIsLoadData(true)
-
+        clearMsgsHandler()
         const { data, error } = await supabase.auth.signUp({
             email: formData.email,
             password: formData.password,
@@ -56,7 +56,7 @@ const SighUp = () => {
     const password = useRef({})
     password.current = watch("password", "")
 
-    function inputChangeHadler() {
+    function clearMsgsHandler() {
         setAccessMsg(false)
         setIsUserExist(false)
     }
@@ -65,7 +65,7 @@ const SighUp = () => {
         <main>
             <div className="container">
                 <div className="main__signup">
-                    <h1 className="signup__title">Реестрация</h1>
+                    <h1 className="signup__title">Реєстраація</h1>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                         className="signup__form">
@@ -76,13 +76,13 @@ const SighUp = () => {
                             className="auth-input signup__input"
                             placeholder="Пошта"
                             {...register('email', {
-                                required: "Обовязкове поле",
+                                required: "Обов`язкове поле",
                                 pattern: {
                                     value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/,
                                     message: "Неправельний формат пошти"
                                 },
                                 onChange: () => {
-                                    inputChangeHadler()
+                                    clearMsgsHandler()
                                 }
                             })}
                         />
@@ -95,10 +95,10 @@ const SighUp = () => {
                                 required: "Обов`язкове поле",
                                 pattern: {
                                     value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}/,
-                                    message: "Пароль мае бути вид 6 то 16 сымволив, мати велику литеру, та з латинских буков"
+                                    message: "Пароль має бути від 6 то 16 символів, мати велику литеру, та бути з латинских букв"
                                 },
                                 onChange: () => {
-                                    inputChangeHadler()
+                                    clearMsgsHandler()
                                 }
                             })}
                         />
@@ -106,12 +106,12 @@ const SighUp = () => {
                         <input
                             type="password"
                             className="auth-input signup__input"
-                            placeholder="Повторить пароль"
+                            placeholder="Повторіть пароль"
                             {...register('cpassword', {
                                 required: "Обов`язкове поле",
-                                validate: value => value === password.current || "Пароли не спивпадають",
+                                validate: value => value === password.current || "Паролі не співпадають",
                                 onChange: () => {
-                                    inputChangeHadler()
+                                    clearMsgsHandler()
                                 }
                             })}
                         />
@@ -119,7 +119,7 @@ const SighUp = () => {
 
                         <button disabled={!isValid || isLoadData === true} className="signup__sibmit-btn">
                             <span className={isLoadData ? "loader loader--active signup__loader" : "loader signup__loader"}></span>
-                            Реестрация
+                            Зареєструватись
                         </button>
 
                         <div className={accessMsg ? "signup__access signup__access--active" : "signup__access"}>
@@ -148,7 +148,7 @@ const SighUp = () => {
                             <p className="signup__access-msg">Для завершення реестрации пидтвердить почту</p>
                         </div>
 
-                        <div className={isUserExist  ? "signup__user-exist signup__user-exist--active" : "signup__user-exist"}>
+                        <div className={isUserExist ? "signup__user-exist signup__user-exist--active" : "signup__user-exist"}>
                             <svg
                                 className="signup__user-exist-icon"
                                 version="1.1"
@@ -170,11 +170,11 @@ const SighUp = () => {
                                     />
                                 </g>
                             </svg>
-                            <p className="signup__access-msg">Користувач вже зареестрован</p>
+                            <p className="signup__access-msg">Користувач вже ззареєстрован</p>
                         </div>
                     </form>
                     <Link className="signup__link-login" href="/auth/login">
-                        Е аккавунт?
+                        Е аккаунт?
                         <svg
                             className="signup__link-arrow"
                             xmlns="http://www.w3.org/2000/svg"

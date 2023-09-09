@@ -22,10 +22,13 @@ export async function middleware(req: NextRequest) {
     if (!user && req.nextUrl.pathname === '/account') {
         return NextResponse.redirect(new URL('/auth/login', req.url))
     }
+    if (!user && req.nextUrl.pathname === '/chat') {
+        return NextResponse.redirect(new URL('/auth/login', req.url))
+    }
 
     return res
 }
 
 export const config = {
-    matcher: ['/auth/login', '/auth/signup', '/account'],
+    matcher: ['/auth/login', '/auth/signup', '/account', '/chat'],
 }

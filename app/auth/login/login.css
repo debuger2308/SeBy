@@ -1,0 +1,70 @@
+
+.main__login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.login__title {
+    margin-top: 50px;
+    font-size: 36px;
+}
+.login__form {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.login__input{
+    margin-top: 20px;
+}
+.login__sibmit-btn{
+    margin-top: 20px;
+    position: relative;
+    border: 1px solid #000000;
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #0083ff;
+}
+.login__sibmit-btn:disabled{
+    background-color: var(--shadowcolor);
+}
+.login__sibmit-btn:disabled:hover{
+    background-color: var(--shadowcolor);
+}
+.login__sibmit-btn:hover{
+    background-color: #006aff;
+}
+
+
+
+.login__link-signup{
+    margin-top: 50px;
+    position: relative;
+}
+.login__link-signup:hover .login__link-arrow{
+    position: absolute;
+    right: -45px;
+    width: 30px;
+    fill: #0083ff;
+}
+.login__link-arrow{
+    transition: all .3s;
+    position: absolute;
+    right: -35px;
+    width: 30px;
+    fill: var(--shadowcolor);
+}
+
+.login__error-msg {
+    color: var(--foreground);
+    font-size: 14px;
+    margin-top: 5px;
+    max-width: 300px;
+}
+
+.login__loader {
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+}

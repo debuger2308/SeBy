@@ -1,0 +1,129 @@
+
+.main__signup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup__title {
+    font-size: 36px;
+    margin-top: 50px;
+}
+
+.signup__form {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup__input {
+    margin-top: 20px;
+}
+
+.signup__link-login {
+    margin-top: 50px;
+    position: relative;
+}
+
+.signup__link-arrow {
+    transition: all .3s;
+    position: absolute;
+    right: -35px;
+    width: 30px;
+    fill: var(--shadowcolor);
+}
+
+.signup__link-login:hover .signup__link-arrow {
+    position: absolute;
+    right: -45px;
+    width: 30px;
+    fill: #0083ff;
+}
+
+
+.signup__sibmit-btn {
+    margin-top: 20px;
+    position: relative;
+    border: 1px solid #000000;
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #0083ff;
+
+}
+
+.signup__sibmit-btn:disabled {
+    background-color: var(--shadowcolor);
+}
+
+.signup__sibmit-btn:disabled:hover {
+    background-color: var(--shadowcolor);
+}
+
+.signup__sibmit-btn:hover {
+    background-color: #006aff;
+}
+
+.signup__error-msg {
+    color: var(--foreground);
+    font-size: 14px;
+    margin-top: 5px;
+    max-width: 300px;
+}
+
+.signup__loader {
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.signup__access {
+    display: none;
+    border-radius: 10px;
+    border: 1px solid var(--foreground);
+    padding: 10px;
+    margin-top: 10px;
+    width: 310px;
+    align-items: center;
+}
+
+.signup__access--active {
+    display: flex;
+}
+
+.signup__access-svg {
+    display: block;
+    width: 40px;
+    height: 40px;
+    fill: #00ab2584;
+}
+
+.signup__access-msg {
+    margin-left: 10px;
+}
+
+
+.signup__user-exist {
+    display: none;
+    border-radius: 10px;
+    border: 1px solid var(--foreground);
+    padding: 10px;
+    margin-top: 10px;
+    width: 310px;
+    align-items: center;
+}
+
+.signup__user-exist--active {
+    display: flex;
+}
+
+.signup__user-exist-icon {
+    height: 40px;
+    width: 40px;
+    fill: #ff0000;
+}
+
+.signup__access-msg {
+    margin-left: 10px;
+}

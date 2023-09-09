@@ -1,13 +1,20 @@
 :root {
-    --background: #faebd7;
+    --background: #ededed;
     --foreground: #292929;
     --shadowcolor: #c1c1c1;
+    --maincolor: #ebebeb;
 }
 
 [data-theme='dark'] {
     --background: #292929;
-    --foreground: #faebd7;
+    --foreground: #efe4d5;
     --shadowcolor: #616161;
+    --maincolor: #242424;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -25,4 +32,44 @@
 
 main {
     flex: 1 1 auto;
+    background-color: var(--maincolor);
+}
+
+
+.auth-input {
+    padding: 10px 15px;
+    font-size: 24px;
+    border: 1px solid #000000;
+    color: #0083ff;
+}
+
+.auth-input:focus {
+    border: 1px solid #0083ff;
+}
+
+
+
+.loader {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 5px dotted #0083ff;
+    border-radius: 50%;
+    display: none;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+.loader--active {
+    display: block;
 }

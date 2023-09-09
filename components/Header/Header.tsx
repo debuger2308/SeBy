@@ -32,7 +32,7 @@ const Header = () => {
                     <aside className={isBurgMenuActive ? "header__aside header__aside--active" : "header__aside"}>
 
 
-                        <Link href="/auth" className={pathname === "/auth" ? 'header__aside-link header__aside-link--active' : "header__aside-link"}>
+                        <Link href="/auth/login" className={pathname === "/auth/login" || pathname === "/auth/signup" ? 'header__aside-link header__aside-link--active' : "header__aside-link"}>
                             <svg className='header__aside-svg' viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                     <style dangerouslySetInnerHTML={{ __html: ".cls-1{fill:none;}" }} />

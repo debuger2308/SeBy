@@ -145,7 +145,7 @@ const SighUp = () => {
                                     />
                                 </g>
                             </svg>
-                            <p className="signup__access-msg">Для завершення реестрации пидтвердить почту</p>
+                            <p className="signup__access-msg">Для завершення реєстрації підтвердіть почту</p>
                         </div>
 
                         <div className={isUserExist ? "signup__user-exist signup__user-exist--active" : "signup__user-exist"}>
@@ -170,7 +170,7 @@ const SighUp = () => {
                                     />
                                 </g>
                             </svg>
-                            <p className="signup__access-msg">Користувач вже ззареєстрован</p>
+                            <p className="signup__access-msg">Користувач вже зареєстрован</p>
                         </div>
                     </form>
                     <Link className="signup__link-login" href="/auth/login">

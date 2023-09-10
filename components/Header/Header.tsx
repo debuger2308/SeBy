@@ -33,13 +33,45 @@ const Header = ({ session }: { session: Session | null }) => {
 
                     <aside className={isBurgMenuActive ? "header__aside header__aside--active" : "header__aside"}>
 
+                        <Link
+                            className={pathname === "/newadvert" ? "header__aside-link header__aside-link--active" : "header__aside-link"}
+                            href="/newadvert">
+                            <svg
+                                className='header__aside-svg'
+                                id="Layer_1"
+                                data-name="Layer 1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 95.9 122.88"
+                            >
+                                <title>checklist</title>
+                                <path d="M37.06,5v5a2.52,2.52,0,0,1-2.28,2.5,2.86,2.86,0,0,1-.89.14H24.6V23H71.29V12.68H62a2.81,2.81,0,0,1-.89-.14A2.52,2.52,0,0,1,58.84,10V5ZM18.4,49.25a2.25,2.25,0,1,1,3.74-2.51l1.23,1.82,4.87-5.92a2.25,2.25,0,0,1,3.48,2.86L25,53.7a2,2,0,0,1-.54.5,2.24,2.24,0,0,1-3.12-.61L18.4,49.25Zm0,23.28A2.25,2.25,0,1,1,22.14,70l1.23,1.82,4.87-5.93a2.25,2.25,0,0,1,3.48,2.86L25,77a1.88,1.88,0,0,1-.54.51,2.24,2.24,0,0,1-3.12-.62L18.4,72.53Zm0,24.2a2.25,2.25,0,1,1,3.74-2.51l1.23,1.83,4.87-5.93A2.25,2.25,0,0,1,31.72,93L25,101.18a2,2,0,0,1-.54.5,2.24,2.24,0,0,1-3.12-.61L18.4,96.73Zm5-68.57a3.85,3.85,0,0,1-2.68-1.11c-.09-.09-.14-.18-.23-.27a3.94,3.94,0,0,1-.89-2.41V19.28h-14a.49.49,0,0,0-.4.18.67.67,0,0,0-.18.4v97.4a.42.42,0,0,0,.18.4.56.56,0,0,0,.4.18H90.32a.56.56,0,0,0,.4-.18.44.44,0,0,0,.18-.4V19.86a.67.67,0,0,0-.18-.4.5.5,0,0,0-.4-.18h-14v5.09a3.89,3.89,0,0,1-.9,2.41c-.08.09-.13.18-.22.27a3.85,3.85,0,0,1-2.68,1.11ZM5.62,122.88A5.63,5.63,0,0,1,0,117.26V19.86a5.63,5.63,0,0,1,5.62-5.62h14V11.47A3.79,3.79,0,0,1,23.4,7.68h8.66V4.2a4.14,4.14,0,0,1,1.25-2.95A4.13,4.13,0,0,1,36.25,0h23.4a4.15,4.15,0,0,1,2.94,1.25,4.14,4.14,0,0,1,1.25,3V7.68H72.5a3.79,3.79,0,0,1,3.79,3.79v2.77h14a5.63,5.63,0,0,1,5.63,5.62v97.4a5.63,5.63,0,0,1-5.63,5.62ZM76.37,99.6a2.55,2.55,0,0,0,0-5.09H42.56a2.55,2.55,0,0,0,0,5.09H76.37Zm0-48.8a2.55,2.55,0,0,0,0-5.09H42.56a2.55,2.55,0,0,0,0,5.09Zm0,24.07a2.55,2.55,0,0,0,0-5.09H42.56a2.55,2.55,0,0,0,0,5.09Z" />
+                            </svg>
+                            Подати оголошення
+                        </Link>
 
+                        {session &&
+                            <Link
+                                href="/chat"
+                                className={pathname === "/chat" ? "header__aside-link header__aside-link--active" : "header__aside-link"}>
+                                <svg className='header__aside-svg'
+                                    data-name="Livello 1"
+                                    id="Livello_1"
+                                    viewBox="0 0 128 128"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <title />
+                                    <path d="M116.73,31.83a3,3,0,0,0-4.2-.61L64.14,67.34a1,1,0,0,1-1.2,0L15.5,31.06a3,3,0,1,0-3.64,4.77L49.16,64.36,12.27,92.16A3,3,0,1,0,15.88,97L54.11,68.14l5.18,4a7,7,0,0,0,8.43.06l5.44-4.06L111.84,97a3,3,0,1,0,3.59-4.81L78.17,64.35,116.12,36A3,3,0,0,0,116.73,31.83Z" />
+                                    <path d="M113,19H15A15,15,0,0,0,0,34V94a15,15,0,0,0,15,15h98a15,15,0,0,0,15-15V34A15,15,0,0,0,113,19Zm9,75a9,9,0,0,1-9,9H15a9,9,0,0,1-9-9V34a9,9,0,0,1,9-9h98a9,9,0,0,1,9,9Z" />
+                                </svg>
+                                Повідомлення
+                            </Link>
+                        }
                         <Link href="/auth/login"
-                         className={pathname === "/auth/login" 
-                         || pathname === "/auth/signup" 
-                         || pathname === "/account" 
-                         ? 'header__aside-link header__aside-link--active' 
-                         : "header__aside-link"}>
+                            className={pathname === "/auth/login"
+                                || pathname === "/auth/signup"
+                                || pathname === "/account"
+                                ? 'header__aside-link header__aside-link--active'
+                                : "header__aside-link"}>
                             <svg className='header__aside-svg' viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                     <style dangerouslySetInnerHTML={{ __html: ".cls-1{fill:none;}" }} />
@@ -56,21 +88,6 @@ const Header = ({ session }: { session: Session | null }) => {
                             </svg>
                             Аккаунт
                         </Link>
-                        {session &&
-                            <Link href="/chat" className={pathname === "/chat" ? "header__aside-link header__aside-link--active" : "header__aside-link"}>
-                                <svg className='header__aside-svg'
-                                    data-name="Livello 1"
-                                    id="Livello_1"
-                                    viewBox="0 0 128 128"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <title />
-                                    <path d="M116.73,31.83a3,3,0,0,0-4.2-.61L64.14,67.34a1,1,0,0,1-1.2,0L15.5,31.06a3,3,0,1,0-3.64,4.77L49.16,64.36,12.27,92.16A3,3,0,1,0,15.88,97L54.11,68.14l5.18,4a7,7,0,0,0,8.43.06l5.44-4.06L111.84,97a3,3,0,1,0,3.59-4.81L78.17,64.35,116.12,36A3,3,0,0,0,116.73,31.83Z" />
-                                    <path d="M113,19H15A15,15,0,0,0,0,34V94a15,15,0,0,0,15,15h98a15,15,0,0,0,15-15V34A15,15,0,0,0,113,19Zm9,75a9,9,0,0,1-9,9H15a9,9,0,0,1-9-9V34a9,9,0,0,1,9-9h98a9,9,0,0,1,9,9Z" />
-                                </svg>
-                                Повідомлення
-                            </Link>
-                        }
 
                         <div className="header__color-theme">
                             <button

@@ -1,15 +1,19 @@
 .main__newadvert {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-}   
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
 
 .newadvert__title {
     margin: 50px 0;
     font-size: 36px;
     text-align: center;
+    flex-basis: 100%;
 }
-
+.newadvert__img-box{
+    position: relative;
+}
 .newadvert__img {
     object-fit: contain;
 }
@@ -33,7 +37,6 @@
     transition: all .3s;
     white-space: nowrap;
     border-radius: 10px;
-
     margin: 0 auto;
     padding: 10px;
     font-size: 20px;
@@ -45,11 +48,11 @@
     color: #0083ff;
 }
 
+
 .newadvert__form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
     gap: 5px;
 }
 
@@ -64,6 +67,7 @@
 }
 
 .newadvert__form-submit {
+    position: relative;
     transition: all .3s;
     padding: 10px;
     font-size: 16px;
@@ -71,13 +75,31 @@
     border: 1px solid #0083ff;
     background-color: unset;
 }
+
 .newadvert__form-submit:hover {
     color: #0083ff;
 }
 
-.newadver__img-delete{
-    
+.newadvert__form-submit:disabled:hover {
+    color: var(--shadowcolor);
 }
-.newadver__img-delete-icon{
 
+.newadvert__loader {
+    left: 30px;
+    top: 50%;
+}
+
+.newadver__img-delete {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 5px;
+    background-color: var(--maincolor);
+    fill: #0083ff;
+    border-radius: 0 0 0 10px;
+}
+
+.newadver__img-delete-icon {
+    width: 30px;
+    height: 30px;
 }

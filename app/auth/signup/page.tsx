@@ -28,7 +28,7 @@ const SighUp = () => {
         },
         watch,
     } = useForm<FormValues>({ mode: "onBlur" })
-
+    console.log(location);
     const supabase = createClientComponentClient()
 
     const onSubmit: SubmitHandler<FormValues> = async (formData) => {

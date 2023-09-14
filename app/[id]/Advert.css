@@ -1,0 +1,89 @@
+.main__advert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.advert__error-title {
+    font-size: 48px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+
+.advert__error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.advert__error-link {
+    font-size: 24px;
+}
+
+.advert__error-link-arrow {
+    transition: all .3s;
+    position: absolute;
+    right: -15px;
+    width: 30px;
+    fill: var(--shadowcolor);
+}
+
+.advert__error-link-arrow {
+    margin-top: 50px;
+    position: relative;
+}
+
+.advert__error-link:hover .advert__error-link-arrow {
+    right: -25px;
+    fill: #0083ff;
+}
+
+
+.advert__info-container {
+    margin-top: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+
+    justify-content: center;
+}
+
+.advert__img {}
+
+.advert__info {
+    max-width: 320px;
+    display: grid;
+    grid-template-areas:
+        "title title title"
+        "desc desc desc"
+        "price tel link";
+    gap: 20px;
+}
+
+.advert__info-title {
+    font-size: 36px;
+    grid-area: title;
+}
+
+.advert__info-desc {
+    font-size: 24px;
+    grid-area: desc;
+}
+
+.advert__info-price {
+    white-space: nowrap;
+    margin-top: auto;
+    grid-area: price;
+}
+
+.advert__info-phone {
+    margin-top: auto;
+    grid-area: tel;
+}
+
+.advert__chat-link {
+    margin-top: auto;
+    grid-area: link;
+}
+

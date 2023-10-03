@@ -248,9 +248,9 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
 
                     <div className="chat__main-messages">
-                        {messages.map((item) => {
+                        {messages.map((item, id) => {
                             return (
-                                <div className={item.from === session?.user.id
+                                <div key={id} className={item.from === session?.user.id
                                     ? "chat__main-msg chat__main-msg--left"
                                     : "chat__main-msg chat__main-msg--right"
                                 }>

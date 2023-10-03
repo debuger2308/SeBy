@@ -41,6 +41,10 @@ header{
     transition: all .3s;
 }
 
+.header__aside-link:hover{
+    color: #0083ff;
+}
+
 .header__aside-link--active svg {
     fill: #0083ff;
 }

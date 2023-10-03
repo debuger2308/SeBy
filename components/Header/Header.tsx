@@ -10,6 +10,7 @@ import { Dancing_Script } from 'next/font/google';
 import type { Session } from '@supabase/auth-helpers-nextjs'
 
 const DancingScript = Dancing_Script({ subsets: ['latin'], weight: '700' })
+
 const Header = ({ session }: { session: Session | null }) => {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
@@ -36,6 +37,7 @@ const Header = ({ session }: { session: Session | null }) => {
                         <Link
                             className={pathname === "/newadvert" ? "header__aside-link header__aside-link--active" : "header__aside-link"}
                             href="/newadvert">
+                            
                             <svg
                                 className='header__aside-svg'
                                 id="Layer_1"

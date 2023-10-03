@@ -1,12 +1,12 @@
 :root {
-    --background: #ededed;
+    --background: #e6e6e6;
     --foreground: #292929;
     --shadowcolor: #c1c1c1;
     --maincolor: #ebebeb;
 }
 
 [data-theme='dark'] {
-    --background: #292929;
+    --background: #1d1d1d;
     --foreground: #efe4d5;
     --shadowcolor: #616161;
     --maincolor: #242424;

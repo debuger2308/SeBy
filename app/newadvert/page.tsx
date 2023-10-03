@@ -8,29 +8,33 @@ import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
 
 type FormValues = {
+    category: string
     title: string
     subtitle: string
     price: string
     tel: string
+    city: string
 }
 
-
+type Categories = {
+    id: number
+    category: string
+}
 const NewAdvert = () => {
     const router = useRouter()
 
     const supabase = createClientComponentClient()
 
-
-
     const {
         register,
         handleSubmit,
         formState: {
-            errors,
-            isValid
+            isValid,
+            errors
         },
-        reset
+        setValue
     } = useForm<FormValues>({ mode: "onBlur" })
+
 
     const [file, setFile] = useState<FileList | null>()
 
@@ -40,7 +44,11 @@ const NewAdvert = () => {
 
     const [isLoadData, setIsLoadData] = useState(false)
 
-    const [userType, setUserType] = useState('')
+    const [categories, setCategories] = useState<Categories[]>()
+
+    const [category, setCategory] = useState('Категорiя')
+
+    const [isCategoriesActive, setIsCategoriesActive] = useState(false)
 
 
 
@@ -53,11 +61,21 @@ const NewAdvert = () => {
                 .from('images')
                 .upload('public/' + uuidv4() + '.jpg', file?.[0])
             if (error) {
-                alert(error)
+                console.log(error)
             } else {
                 setDataPath(data.path)
                 createImageURL(data.path)
             }
+        }
+    }
+
+    async function getCategories() {
+        const { data, error }: { data: Categories[] | null, error: any } = await supabase
+            .from('categories')
+            .select()
+        if (!error) setCategories(data || [])
+        else {
+            setCategories([])
         }
     }
 
@@ -87,12 +105,20 @@ const NewAdvert = () => {
 
 
 
+
+    useEffect(() => {
+        getCategories()
+        setValue("category", category, { shouldValidate: false })
+    }, [])
+
+
+
     const onSubmit: SubmitHandler<FormValues> = async (formData) => {
         setIsLoadData(true)
-
         const {
             data: { session },
         } = await supabase.auth.getSession()
+
 
         const { data, error } = await supabase
             .from('adverts')
@@ -103,22 +129,31 @@ const NewAdvert = () => {
                     tel: formData.tel,
                     subtitle: formData.subtitle,
                     imgPath: dataPath,
-                    user_type: session?.user.id
+                    user: session?.user.id,
+                    category: formData.category,
+                    city: formData.city
                 }
             ])
             .select()
         if (error) {
             setIsLoadData(false)
-            alert(error)
+            alert(error.code)
         }
         else router.push(`/${data[0].id}`)
     }
-
 
     return (
         <main>
             <div className="container">
                 <div className="main__newadvert">
+                    <div
+                        style={isCategoriesActive ? { display: "block" } : { display: "none" }}
+                        onClick={() => {
+                            setIsCategoriesActive(false)
+                        }}
+                        className="category__dropmenu-closer"></div>
+
+
                     <h1 className='newadvert__title'>Створити оголошення</h1>
 
                     {imgUrl.length === 0 ?
@@ -194,47 +229,162 @@ const NewAdvert = () => {
                         onSubmit={handleSubmit(onSubmit)}
                         action="">
 
-                        <input
-                            className='newadvert__form-input'
-                            placeholder='Назва'
-                            {...register('title', {
-                                required: "Обов`язкове поле",
-                            })}
-                            type="text"
-                        />
-                        <input
-                            className='newadvert__form-input'
-                            placeholder='Опис'
-                            {...register('subtitle')}
-                            type="text"
-                        />
-                        <input
-                            className='newadvert__form-input'
-                            placeholder='Цiна'
-                            {...register('price', {
-                                required: "Обов`язкове поле"
-                            })}
-                            type="number"
-                        />
-                        <input
-                            className='newadvert__form-input'
-                            placeholder='Телефон'
-                            {...register('tel', {
-                                required: "Обов`язкове поле"
-                            })}
-                            type="tel"
-                        />
+                        <div className={errors.category ? 'newadvert__form-select newadvert__input-wrapper--error' : "newadvert__form-select"}>
+                            <svg
+                                onClick={() => {
+                                    setIsCategoriesActive(!isCategoriesActive)
+                                }}
+                                className={isCategoriesActive ? "newadvert__select-icon newadvert__select-icon--active" : "newadvert__select-icon"}
+                                version="1.1"
+                                id="Layer_1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                x="0px"
+                                y="0px"
+                                width="122.883px"
+                                height="122.882px"
+                                viewBox="0 0 122.883 122.882"
+                                enableBackground="new 0 0 122.883 122.882"
+                                xmlSpace="preserve"
+                            >
+                                <g>
+                                    <path d="M122.883,61.441c0,16.966-6.877,32.326-17.996,43.445c-11.119,11.118-26.479,17.995-43.446,17.995 c-16.966,0-32.326-6.877-43.445-17.995C6.877,93.768,0,78.407,0,61.441c0-16.967,6.877-32.327,17.996-43.445 C29.115,6.877,44.475,0,61.441,0c16.967,0,32.327,6.877,43.446,17.996C116.006,29.115,122.883,44.475,122.883,61.441 L122.883,61.441z M80.717,71.377c1.783,1.735,4.637,1.695,6.373-0.088c1.734-1.784,1.695-4.637-0.09-6.372L64.48,43.078 l-3.142,3.23l3.146-3.244c-1.791-1.737-4.653-1.693-6.39,0.098c-0.05,0.052-0.099,0.104-0.146,0.158L35.866,64.917 c-1.784,1.735-1.823,4.588-0.088,6.372c1.735,1.783,4.588,1.823,6.372,0.088l19.202-18.779L80.717,71.377L80.717,71.377z M98.496,98.496c9.484-9.482,15.35-22.584,15.35-37.055c0-14.472-5.865-27.573-15.35-37.056 C89.014,14.903,75.912,9.038,61.441,9.038c-14.471,0-27.572,5.865-37.055,15.348C14.903,33.869,9.038,46.97,9.038,61.441 c0,14.471,5.865,27.572,15.349,37.055c9.482,9.483,22.584,15.349,37.055,15.349C75.912,113.845,89.014,107.979,98.496,98.496 L98.496,98.496z" />
+                                </g>
+                            </svg>
+
+                            <input
+                                style={category !== 'Категорiя' ? { color: "#0083ff" } : { color: "var(--shadowcolor)" }}
+                                className='newadvert__select-input'
+                                type="button"
+                                {...register('category', {
+                                    validate: value => value !== 'Категорiя' || "Оберiть категорiю"
+                                })}
+                                onClick={() => {
+                                    setIsCategoriesActive(!isCategoriesActive)
+                                }}
+                            />
+
+
+
+                            <div
+                                className="newadvert__select-options"
+                                style={isCategoriesActive ? { display: "block" } : { display: "none" }}
+                            >
+                                {categories?.map((item) => {
+                                    return <div
+                                        onClick={() => {
+                                            setValue("category", item.category, { shouldValidate: true })
+                                            setCategory(item.category)
+                                            setIsCategoriesActive(false)
+                                        }}
+                                        key={item.id}
+                                        className="newadvert__select-option"
+                                    >
+                                        {item.category}
+                                    </div>
+                                })}
+                            </div>
+                        </div>
+
+
+                        <div className={errors.title
+                            ? "newadvert__input-wrapper newadvert__input-wrapper--error"
+                            : "newadvert__input-wrapper"}>
+
+                            <input
+                                className='newadvert__form-input'
+                                placeholder='Назва'
+                                {...register('title', {
+                                    maxLength: { value: 50, message: "максимум 50 симолiв" },
+                                    required: true
+                                })}
+                                type="text"
+                            />
+                            <strong className="newadvert__error-message">
+                                {errors.title?.message}
+                            </strong>
+                        </div>
+
+
+                        <div className="newadvert__input-wrapper ">
+                            <input
+                                className='newadvert__form-input'
+                                placeholder='Опис'
+                                {...register('subtitle', {
+                                    maxLength: { value: 350, message: "максимум 350 симолiв" },
+                                    required: true
+                                })}
+                                type="text"
+                            />
+                            <strong className="newadvert__error-message">
+                                {errors.subtitle?.message}
+                            </strong>
+                        </div>
+
+                        <div className={errors.title
+                            ? "newadvert__input-wrapper newadvert__input-wrapper--error"
+                            : "newadvert__input-wrapper"}>
+
+                            <input
+                                className='newadvert__form-input'
+                                placeholder='Цiна'
+                                {...register('price', {
+                                    maxLength: { value: 20, message: "максимум 20 симолiв" },
+                                    required: true
+                                })}
+                                type="number"
+                            />
+                            <strong className="newadvert__error-message">
+                                {errors.price?.message}
+                            </strong>
+                        </div>
+
+                        <div className={errors.tel
+                            ? "newadvert__input-wrapper newadvert__input-wrapper--error"
+                            : "newadvert__input-wrapper"}>
+                            <input
+                                className='newadvert__form-input'
+                                placeholder='Телефон'
+                                {...register('tel', {
+                                    maxLength: { value: 10, message: "Поле повинно мати 10 символiв" },
+                                    minLength: { value: 10, message: "Поле повинно мати 10 символiв" },
+                                    required: true
+                                })}
+                                type="tel"
+                            />
+                            <strong className="newadvert__error-message">
+                                {errors.tel?.message}
+                            </strong>
+                        </div>
+                        <div className={errors.city
+                            ? "newadvert__input-wrapper newadvert__input-wrapper--error"
+                            : "newadvert__input-wrapper"}>
+                            <input
+                                className='newadvert__form-input'
+                                placeholder='Мiсто'
+                                {...register('city', {
+                                    maxLength: { value: 50, message: "максимум 50 симолiв" },
+                                    required: true
+                                })}
+                                type="text"
+                            />
+                            <strong className="newadvert__error-message">
+                                {errors.city?.message}
+                            </strong>
+                        </div>
+
+
                         <button
-                            disabled={!isValid || isLoadData === true}
-                            className='newadvert__form-submit'
+
+                            className={!isValid || isLoadData === true ? 'newadvert__form-submit newadvert__form-submit--disabled' : "newadvert__form-submit"}
                         >
                             <span className={isLoadData ? "loader loader--active newadvert__loader" : "loader newadvert__loader"}></span>
                             Створити
                         </button>
                     </form>
                 </div>
-            </div>
-        </main>
+            </div >
+        </main >
     );
 }
 

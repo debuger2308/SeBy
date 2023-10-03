@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import Image from 'next/image';
 import "./Advert.css"
 import Link from "next/link";
+import ChatLink from "@/components/ChatLink/ChatLink";
 
 type Props = {
     params: {
@@ -17,12 +18,20 @@ type Adverts = {
     tel: string
     subtitle: string
     imgPath: string
-    user_type: string
+    city: string
+    category: string
+    user: string
 }
 
 
 const Advert = async ({ params: { id } }: Props) => {
     const supabase = createServerComponentClient({ cookies })
+
+    const {
+        data: { session },
+    } = await supabase.auth.getSession()
+
+
 
     const { data, error }: { data: Adverts[] | null, error: any } = await supabase
         .from('adverts')
@@ -65,25 +74,43 @@ const Advert = async ({ params: { id } }: Props) => {
                         </div>
                         :
                         <div className="advert__info-container">
-                            {dataUrl.data ?
-                                <Image alt="фото" className="advert__img" src={dataUrl.data?.signedUrl || ''} height={300} width={300} />
-                                :
-                                <Image alt="нема фото" className="advert__img" src='/images/noImage.png' height={300} width={300} />
-                            }
-                            <div className="advert__info">
-                                <h1 className="advert__info-title">{advertInfo?.title}</h1>
-                                <p className="advert__info-desc">Опис: {advertInfo?.subtitle}</p>
-                                <strong className="advert__info-price">Цiна: {advertInfo?.price}₴</strong>
-                                <p className="advert__info-phone">
 
-                                    {advertInfo?.tel}
-                                </p>
-                                {advertInfo?.user_type &&
-                                    <Link href={'/chat'} className="advert__chat-link">
-                                        написати
-                                    </Link>
+                            <div className="advert__img-box">
+                                {dataUrl.data ?
+                                    <Image
+                                        alt="фото"
+                                        className="advert__img"
+                                        src={dataUrl.data?.signedUrl || ''}
+                                        style={{ objectFit: "cover" }}
+                                        fill
+
+                                    />
+                                    :
+                                    <Image
+                                        alt="нема фото"
+                                        className="advert__img"
+                                        src='/images/noImage.png'
+                                        style={{ objectFit: "fill" }}
+                                        fill
+                                    />
                                 }
                             </div>
+
+                            <div className="advert__info">
+                                <h3 className="advert__info-title advert__grid-cells">{advertInfo?.title}</h3>
+                                <p className="advert__info-subtitle advert__grid-cells">Опис: {advertInfo?.subtitle}</p>
+                                <p className="advert__info-city advert__grid-cells">City</p>
+                                <p className="advert__info-tel advert__grid-cells">{advertInfo?.tel}</p>
+                                <strong className="advert__info-price advert__grid-cells">{advertInfo?.price}₴</strong>
+                                {advertInfo?.user !== session?.user.id &&
+                                    <ChatLink
+                                        sessionUserId={session?.user.id || ''}
+                                        advertUserId={advertInfo?.user || ''}
+                                        advertId={advertInfo?.id || -1}
+                                    />
+                                }
+                            </div>
+
                         </div>
                     }
 

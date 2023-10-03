@@ -31,7 +31,7 @@ export default async function RootLayout({
         <html lang='en'>
             <body style={nunito.style}>
                 <Providers>
-                    <Header session={session}/>
+                    <Header session={session} />
                     {children}
                 </Providers>
             </body>

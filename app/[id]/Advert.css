@@ -1,8 +1,5 @@
-.main__advert {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+
+
 
 .advert__error-title {
     font-size: 48px;
@@ -40,50 +37,78 @@
 }
 
 
+
+
 .advert__info-container {
-    margin-top: 100px;
+    margin-top: 50px;
     display: flex;
     flex-wrap: wrap;
-    gap: 50px;
-
     justify-content: center;
+    gap: 20px;
+}
+.advert__img-box{
+    width: 350px;
+    height: 350px;
+    position: relative;
+}
+.advert__img {
+    border: 2px solid var(--background);
+    border-radius: 10px;
 }
 
-.advert__img {}
-
 .advert__info {
-    max-width: 320px;
+    width: 350px;
     display: grid;
     grid-template-areas:
-        "title title title"
-        "desc desc desc"
-        "price tel link";
-    gap: 20px;
+        "title title"
+        "subtitle subtitle"
+        "city tel"
+        "price chat"
+    ;
+    grid-template-rows: auto 1fr;
+    gap: 10px;
+}
+.advert__grid-cells{
+    background-color: var(--background);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--shadowcolor);
 }
 
 .advert__info-title {
-    font-size: 36px;
     grid-area: title;
+    font-size: 26px;
+    font-weight: 600;
+    color: #0083ff;
 }
 
-.advert__info-desc {
-    font-size: 24px;
-    grid-area: desc;
+.advert__info-subtitle {
+    grid-area: subtitle;
+    font-size: 16px;
+    
 }
+
+.advert__info-city {
+    grid-area: city;
+    text-align: center;
+}
+
+.advert__info-tel {
+    grid-area: tel;
+    text-align: center;
+}
+
 
 .advert__info-price {
-    white-space: nowrap;
-    margin-top: auto;
     grid-area: price;
+    text-align: center;
 }
 
-.advert__info-phone {
-    margin-top: auto;
-    grid-area: tel;
+.advert__info-chat {
+    grid-area: chat;
+    text-align: center;
 }
-
-.advert__chat-link {
-    margin-top: auto;
-    grid-area: link;
+.advert__info-chat:hover {
+    border: 1px solid #0083ff;
+    transition: all .3s;
 }
-

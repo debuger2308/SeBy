@@ -1,6 +1,6 @@
 "use client"
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "./UserChat.css"
 import { createClientComponentClient, type Session } from '@supabase/auth-helpers-nextjs'
 import Image from 'next/image'
@@ -38,12 +38,39 @@ type payload = {
 type Message = {
     message: string
 }
+type AdvertInfo = {
+    Advert: Adverts | null;
+    ChatID: string;
+}
+type ChatsMessages = {
+    message: Messages[]
+    ChatID: string
+}
 
-const reverseChatId = (chatID: string) => {
-    return chatID.split('@').reverse().join('@')
+
+function getMessages(chats: Chats[], additionalChat: Chats[]) {
+
+    
+
+    const messages: ChatsMessages[] = []
+
+    chats.forEach((item) => {
+
+        messages.push({
+            message: additionalChat.find((elem) => elem.ChatID === item.ChatID.split("@").reverse().join("@"))
+                ?.messages.concat(item.messages)
+                .sort((a, b) => a.date - b.date)
+                || [],
+            ChatID: item.ChatID
+        })
+    })
+    return messages
+
 }
 
 const UserChat = ({ session, chats, additionalChat }: { session: Session | null, chats: Chats[], additionalChat: Chats[] }) => {
+
+    const scrollChatRef = useRef<HTMLDivElement>(null)
 
     const supabase = createClientComponentClient()
 
@@ -53,34 +80,28 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
         reset
     } = useForm<Message>({ mode: "onBlur" })
 
+    const [chatsInfo, setChatsInfo] = useState<AdvertInfo[]>([])
 
-    const [userChats, setUserChats] = useState(chats)
+    const [activeChat, setActiveChat] = useState<AdvertInfo>()
 
-    const [additionalChats, setAdditionalChats] = useState(additionalChat)
+    const [messages, setMessages] = useState<ChatsMessages[]>(getMessages(chats, additionalChat))
 
-    const [activeChat, setActiveChat] = useState(localStorage.getItem('SeBy/ActiveChat'))
-
-
-
-    const infoActiveChat = userChats.find((chat) => {
-        if (chat.ChatID === activeChat) return chat
-    })
-
-    const infoAdditionalChats = additionalChats.find((chat) => {
-        if (reverseChatId(chat.ChatID) === activeChat) return chat
-    })
-
-    const [sendMsg, setSentMsg] = useState(infoActiveChat?.messages || [])
-    const [recievedMsg, setRecievedMsg] = useState(infoAdditionalChats?.messages || [])
-
-    const messages = [...sendMsg, ...recievedMsg].sort((a, b) => a.date - b.date)
-
-
+    
 
     useEffect(() => {
-        setSentMsg(infoActiveChat?.messages || [])
-        setRecievedMsg(infoAdditionalChats?.messages || [])
+        setMessages(getMessages(chats, additionalChat))
+        scrollChatRef.current?.scrollIntoView({ behavior: "instant" });
+    }, [activeChat])
 
+    useEffect(()=>{
+        scrollChatRef.current?.scrollIntoView({ behavior: 'instant' });
+    },[messages])
+
+    useEffect(() => {
+        setActiveChat(chatsInfo?.find((chat => chat.ChatID === localStorage.getItem('SeBy/ActiveChat'))))
+    }, [chatsInfo])
+
+    useEffect(() => {
 
         const channel = supabase
             .channel('chats')
@@ -91,7 +112,13 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                 filter: `From=eq.${session?.user.id}`,
             },
                 (payload: payload) => {
-                    setUserChats([payload.new, ...userChats.filter((chat) => chat.id !== payload.new.id)])
+                    const newMessages = messages.find((item => item.ChatID === payload.new.ChatID))
+                        ?.message.filter(item => item.from !== session?.user.id).concat(payload.new.messages)
+                        .sort((a, b) => a.date - b.date) || []
+
+                    setMessages([...messages.filter((item) => item.ChatID !== payload.new.ChatID),
+                    { message: newMessages, ChatID: payload.new.ChatID }
+                    ])
                 }
             )
             .on('postgres_changes', {
@@ -101,7 +128,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                 filter: `From=eq.${session?.user.id}`,
             },
                 (payload: payload) => {
-                    setUserChats([payload.new, ...userChats.filter((chat) => chat.id !== payload.new.id)])
+
                 }
             )
             .on('postgres_changes', {
@@ -111,7 +138,16 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                 filter: `To=eq.${session?.user.id}`,
             },
                 (payload: payload) => {
-                    setAdditionalChats([payload.new, ...additionalChats.filter((chat) => chat.id !== payload.new.id)])
+
+                    const newMessages = messages.find((item => item.ChatID === payload.new.ChatID.split("@").reverse().join("@")))
+                        ?.message.filter(item => item.from === session?.user.id).concat(payload.new.messages)
+                        .sort((a, b) => a.date - b.date) || []
+
+                    setMessages([...messages.filter((item) => item.ChatID !== payload.new.ChatID.split("@").reverse().join("@")),
+                    { message: newMessages, ChatID: payload.new.ChatID.split("@").reverse().join("@") }
+                    ])
+
+
                 }
             )
             .on('postgres_changes', {
@@ -121,19 +157,19 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                 filter: `To=eq.${session?.user.id}`,
             },
                 (payload: payload) => {
-                    setAdditionalChats([payload.new, ...additionalChats.filter((chat) => chat.id !== payload.new.id)])
+
                 }
             )
             .subscribe()
 
 
-        Promise.all(userChats.map(async (chat) => {
-            if (!chat.Advert) {
-                const { data, error }: { data: Adverts[] | null, error: any } = await supabase
-                    .from('adverts')
-                    .select()
-                    .eq('id', chat.AdvertID)
+        Promise.all(chats.map(async (chat) => {
+            const { data, error }: { data: Adverts[] | null, error: any } = await supabase
+                .from('adverts')
+                .select()
+                .eq('id', chat.AdvertID)
 
+            if (data) {
                 const advertInfo = data?.[0]
                 const dataUrl = await supabase
                     .storage
@@ -141,19 +177,19 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                     .createSignedUrl(data?.[0]?.imgPath || '', 120)
 
                 if (advertInfo) advertInfo.imgPath = dataUrl.data?.signedUrl || ''
-                return { ...chat, Advert: advertInfo }
+                return { Advert: advertInfo, ChatID: chat.ChatID }
             }
-            else return chat
+            else return { Advert: null, ChatID: chat.ChatID }
 
         })).then((response) => {
-            if (JSON.stringify(response) !== JSON.stringify(userChats)) setUserChats(response)
+            if (JSON.stringify(response) !== JSON.stringify(chatsInfo)) setChatsInfo(response.reverse())
         })
 
         return () => {
             supabase.removeChannel(channel)
         }
 
-    }, [userChats, additionalChats])
+    }, [])
 
 
     const onSubmit: SubmitHandler<Message> = async (formData) => {
@@ -162,37 +198,37 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
             .from('chats')
             .update({
                 messages: [
-                    ...sendMsg,
+                    ...messages?.find(msgInfo => msgInfo.ChatID === activeChat?.ChatID)
+                        ?.message.filter((message) => message.from === session?.user.id) || [],
                     {
-                        from: infoActiveChat?.From,
+                        from: session?.user.id,
                         message: formData.message,
                         date: new Date().getTime()
                     }
                 ]
             })
-            .eq('ChatID', infoActiveChat?.ChatID)
+            .eq('ChatID', activeChat?.ChatID)
             .select()
     }
 
-
-
+    // console.log("render");
     return (
         <div className="main__chat">
             <div className="chat">
                 <div className="chat__aside">
-                    {userChats.map((chat, id) => {
+                    {chatsInfo?.map((info, id) => {
                         return (
                             <button
                                 onClick={() => {
-                                    localStorage.setItem('SeBy/ActiveChat', chat.ChatID)
-                                    setActiveChat(chat.ChatID)
+                                    localStorage.setItem('SeBy/ActiveChat', info.ChatID)
+                                    setActiveChat(chatsInfo?.find((chat => chat.ChatID === info.ChatID)))
                                 }}
                                 key={id}
-                                className={activeChat === chat.ChatID
+                                className={activeChat?.ChatID === info.ChatID
                                     ? "chat__aside-btn chat__aside-btn--active"
                                     : "chat__aside-btn"
                                 }>
-                                {chat.Advert?.imgPath === '' &&
+                                {info.Advert?.imgPath === '' &&
                                     <Image
                                         className="chat__aside-img"
                                         src='/images/noImage.png'
@@ -201,27 +237,28 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                                         alt="нема фото"
                                     />
                                 }
-                                {chat.Advert?.imgPath
+                                {info.Advert?.imgPath && info.Advert?.imgPath !== ''
                                     &&
                                     <Image
                                         className="chat__aside-img"
-                                        src={chat.Advert?.imgPath || ''}
+                                        src={info.Advert?.imgPath}
                                         width={60}
                                         height={60}
                                         alt=""
                                     />
                                 }
-                                <h3 className="chat__aside-title">{chat.Advert?.title}</h3>
-                                <p className="chat__aside-subtitle">{chat?.messages?.[-1]?.message}ываыва</p>
+                                <h3 className="chat__aside-title">{info.Advert?.title}</h3>
+                                {/* <p className="chat__aside-subtitle">{info?.messages?.[-1]?.message}ываыва</p> */}
                             </button>)
                     })}
+
                 </div>
 
                 <div className="chat__main">
                     <div className="chat__main-header">
-                        <h3 className="chat__main-title">{infoActiveChat?.Advert?.title}</h3>
-                        <Link href={`/${infoActiveChat?.Advert?.id}`}>
-                            {infoActiveChat?.Advert?.imgPath === '' &&
+                        <h3 className="chat__main-title">{activeChat?.Advert?.title}</h3>
+                        <Link href={`/${activeChat?.Advert?.id}`}>
+                            {activeChat?.Advert?.imgPath === '' &&
                                 <Image
                                     className="chat__main-img"
                                     src='/images/noImage.png'
@@ -230,12 +267,12 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                                     alt="нема фото"
                                 />
                             }
-                            {infoActiveChat?.Advert?.imgPath
+                            {activeChat?.Advert?.imgPath && activeChat?.Advert?.imgPath !== ''
                                 &&
                                 <Image
 
                                     className="chat__main-img"
-                                    src={infoActiveChat.Advert?.imgPath || ''}
+                                    src={activeChat.Advert?.imgPath}
                                     width={80}
                                     height={80}
                                     alt=""
@@ -248,16 +285,18 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
 
                     <div className="chat__main-messages">
-                        {messages.map((item, id) => {
-                            return (
-                                <div key={id} className={item.from === session?.user.id
-                                    ? "chat__main-msg chat__main-msg--left"
-                                    : "chat__main-msg chat__main-msg--right"
-                                }>
-                                    {item.message}
-                                </div>
-                            )
-                        })}
+                        {
+                            messages?.find(msgInfo => msgInfo.ChatID === activeChat?.ChatID)?.message.map((item, id) => {
+                                return (
+                                    <div ref={scrollChatRef} key={id} className={item.from === session?.user.id
+                                        ? "chat__main-msg chat__main-msg--left"
+                                        : "chat__main-msg chat__main-msg--right"
+                                    }>
+                                        {item.message}
+                                    </div>
+                                )
+                            })}
+
                     </div>
 
 
@@ -272,7 +311,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                             className="chat__form-input"
                             required
                         />
-                        <button className="chat__form-btn">
+                        <button className="chat__form-btn" disabled={activeChat === undefined}>
                             <svg
                                 className="chat__form-btn-icon"
                                 version="1.1"

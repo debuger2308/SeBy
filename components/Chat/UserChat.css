@@ -18,6 +18,7 @@
 }
 
 .chat__aside-btn {
+    height: 80px;
     padding: 10px;
     display: grid;
     grid-template-areas:

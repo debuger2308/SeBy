@@ -15,6 +15,7 @@
 .chat__aside {
     display: flex;
     flex-direction: column;
+    width: 250px;
 }
 
 .chat__aside-btn {
@@ -25,7 +26,7 @@
         "img title"
         "img subtitle";
     grid-template-columns: auto 1fr;
-    width: 250px;
+    width: 100%;
     background-color: unset;
 }
 
@@ -69,17 +70,29 @@
 
 .chat__main-header {
     display: flex;
+    gap: 5px;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--shadowcolor);
     padding: 10px 20px;
 }
+.chat__header-back-btn {
+    display: none;
+    background-color: unset;
+    margin-right: 10px;
+}
+.chat__header-back-icon {
+    fill: #0083ff;
+    width: 30px;
+    height: 50px;
+}
 
 .chat__main-title {
+    word-wrap: break-word;
     font-size: 28px;
     font-weight: 600;
     color: var(--foreground);
-    max-width: 200px;
+    max-width: 250px;
 }
 
 .chat__main-img {
@@ -98,9 +111,9 @@
 .chat__main-msg {
     word-wrap: break-word;
     position: relative;
-    width: intrinsic; 
+    width: intrinsic;
     width: -moz-max-content;
-    width: -webkit-max-content; 
+    width: -webkit-max-content;
     width: max-content;
     padding: 10px;
     padding-bottom: 22px;
@@ -116,7 +129,7 @@
 }
 
 .chat__main-msg--right {
-    
+
     margin-right: auto;
 }
 
@@ -124,9 +137,11 @@
     display: flex;
     border-top: 2px solid var(--shadowcolor);
 }
+
 .chat__message {
     font-size: 18px;
 }
+
 .chat__message-time {
     position: absolute;
     bottom: 5px;
@@ -145,7 +160,7 @@
     width: 60px;
     height: 50px;
     position: relative;
-    background-color: var(--background);
+    background-color: unset;
     border-radius: 0 0 10px 0;
 }
 
@@ -163,4 +178,44 @@
     width: 50px;
     height: 50px;
     padding: 5px;
+}
+
+@media (max-width:700px) {
+
+    .chat__main {
+        width: 300px;
+    }
+    .chat__main--disabled{
+        display: none;
+    }
+    .chat__main-title {
+        word-wrap: break-word;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--foreground);
+        max-width: 150px;
+    }
+    .chat__main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+    }
+    .chat__header-back-btn {
+        display: block;
+        background-color: unset;
+        margin-right: 10px;
+    }
+    .chat__form-input {
+        flex-grow: 1;
+        font-size: 18px;
+        padding: 0 10px;
+    }
+
+    .chat__aside {
+        width: 300px;
+    }
+    .chat__aside--disabled {
+        display: none;
+    }
 }

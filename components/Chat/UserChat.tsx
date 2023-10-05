@@ -82,6 +82,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
     const [chatsInfo, setChatsInfo] = useState<AdvertInfo[]>([])
 
+    const [isActiveChatMenu, setIsActiveChatMenu] = useState(true)
 
     const [activeChat, setActiveChat] = useState<AdvertInfo>()
 
@@ -219,11 +220,11 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
             .select()
     }
 
-    // console.log("render");
+    console.log("render");
     return (
         <div className="main__chat">
             <div className="chat">
-                <div className="chat__aside">
+                <div className={isActiveChatMenu ? "chat__aside" : "chat__aside chat__aside--disabled"}>
                     {chatsInfo?.map((info, id) => {
 
                         const lastMessage = messages.find(item => item.ChatID === info.ChatID)?.message.slice(-1)[0]
@@ -233,6 +234,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                                 onClick={() => {
                                     localStorage.setItem('SeBy/ActiveChat', info.ChatID)
                                     setActiveChat(chatsInfo?.find((chat => chat.ChatID === info.ChatID)))
+                                    setIsActiveChatMenu(false)
                                 }}
                                 key={id}
                                 className={activeChat?.ChatID === info.ChatID
@@ -265,8 +267,33 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
                 </div>
 
-                <div className="chat__main">
+                <div className={isActiveChatMenu ? "chat__main chat__main--disabled" : "chat__main"}>
                     <div className="chat__main-header">
+                        <button
+                            onClick={() => {
+                                setIsActiveChatMenu(true)
+                            }}
+                            className="chat__header-back-btn">
+                            <svg
+                                className="chat__header-back-icon"
+                                version="1.1"
+                                id="Layer_1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                x="0px"
+                                y="0px"
+                                width="94.051px"
+                                height="122.879px"
+                                viewBox="0 0 94.051 122.879"
+                                enableBackground="new 0 0 94.051 122.879"
+                                xmlSpace="preserve"
+                            >
+                                <g>
+                                    <path d="M92.125,110.623c2.619,2.692,2.561,6.995-0.135,9.618c-2.689,2.618-6.994,2.558-9.611-0.137L29.865,65.95l4.875-4.737 l-4.895,4.747c-2.623-2.705-2.56-7.024,0.146-9.644c0.081-0.076,0.159-0.148,0.239-0.22L82.377,2.774 c2.619-2.694,6.924-2.755,9.613-0.137c2.695,2.623,2.754,6.925,0.135,9.618L44.229,61.232L92.125,110.623L92.125,110.623 L92.125,110.623z M12.651,6.325C12.651,2.832,9.819,0,6.325,0C2.833,0,0,2.832,0,6.325v110.229c0,3.493,2.833,6.325,6.325,6.325 c3.494,0,6.326-2.832,6.326-6.325V6.325L12.651,6.325z" />
+                                </g>
+                            </svg>
+
+                        </button>
                         <h3 className="chat__main-title">{activeChat?.Advert?.title}</h3>
                         <Link href={`/${activeChat?.Advert?.id}`}>
                             {activeChat?.Advert?.imgPath === '' &&
@@ -298,19 +325,20 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                     <div className="chat__main-messages">
                         {
                             messages?.find(msgInfo => msgInfo.ChatID === activeChat?.ChatID)?.message.map((item, id) => {
-                                console.log(item);
                                 const messageDate = new Date(item.date)
                                 return (
                                     <div ref={scrollChatRef} key={id} className={item.from === session?.user.id
                                         ? "chat__main-msg chat__main-msg--left"
                                         : "chat__main-msg chat__main-msg--right"
                                     }>
+
+
                                         <p className="chat__message">
                                             {item.message}
                                         </p>
 
                                         <p className="chat__message-time">
-                                            {`${messageDate.getDay()}/${messageDate.getMonth()}/${messageDate.getFullYear()} ${messageDate.getMinutes()}:${messageDate.getHours()}`}
+                                            {`${messageDate.getDay()}/${messageDate.getMonth()}/${messageDate.getFullYear()} ${messageDate.getHours()}:${messageDate.getMinutes()}`}
                                         </p>
                                     </div>
                                 )

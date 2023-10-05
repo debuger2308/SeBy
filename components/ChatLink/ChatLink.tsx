@@ -11,7 +11,7 @@ const ChatLink = ({ advertUserId, sessionUserId, advertId }: { advertUserId: str
             href="/chat"
             className="advert__info-chat advert__grid-cells"
             onClick={async () => {
-                localStorage.setItem('SeBy/ActiveChat', sessionUserId + advertId + advertUserId)
+                localStorage.setItem('SeBy/ActiveChat', sessionUserId + "@" + advertId + "@" + advertUserId)
                 const { data, error } = await supabase
                     .from('chats')
                     .insert([

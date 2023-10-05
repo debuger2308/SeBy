@@ -50,7 +50,7 @@ type ChatsMessages = {
 
 function getMessages(chats: Chats[], additionalChat: Chats[]) {
 
-    
+
 
     const messages: ChatsMessages[] = []
 
@@ -82,23 +82,51 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
     const [chatsInfo, setChatsInfo] = useState<AdvertInfo[]>([])
 
+
     const [activeChat, setActiveChat] = useState<AdvertInfo>()
 
-    const [messages, setMessages] = useState<ChatsMessages[]>(getMessages(chats, additionalChat))
-
-    
+    const [messages, setMessages] = useState<ChatsMessages[]>([])
 
     useEffect(() => {
         setMessages(getMessages(chats, additionalChat))
+
+        Promise.all(chats.map(async (chat) => {
+            const { data, error }: { data: Adverts[] | null, error: any } = await supabase
+                .from('adverts')
+                .select()
+                .eq('id', chat.AdvertID)
+
+            if (data) {
+                const advertInfo = data?.[0]
+                const dataUrl = await supabase
+                    .storage
+                    .from("images")
+                    .createSignedUrl(data?.[0]?.imgPath || '', 120)
+
+                if (advertInfo) advertInfo.imgPath = dataUrl.data?.signedUrl || ''
+                return { Advert: advertInfo, ChatID: chat.ChatID }
+            }
+            else return { Advert: null, ChatID: chat.ChatID }
+
+        })).then((response) => {
+            if (JSON.stringify(response) !== JSON.stringify(chatsInfo)) setChatsInfo(response.reverse())
+        })
+
+
+    }, [])
+
+    useEffect(() => {
         scrollChatRef.current?.scrollIntoView({ behavior: "instant" });
     }, [activeChat])
 
-    useEffect(()=>{
+    useEffect(() => {
         scrollChatRef.current?.scrollIntoView({ behavior: 'instant' });
-    },[messages])
+    }, [messages])
 
     useEffect(() => {
+
         setActiveChat(chatsInfo?.find((chat => chat.ChatID === localStorage.getItem('SeBy/ActiveChat'))))
+
     }, [chatsInfo])
 
     useEffect(() => {
@@ -112,6 +140,8 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                 filter: `From=eq.${session?.user.id}`,
             },
                 (payload: payload) => {
+
+
                     const newMessages = messages.find((item => item.ChatID === payload.new.ChatID))
                         ?.message.filter(item => item.from !== session?.user.id).concat(payload.new.messages)
                         .sort((a, b) => a.date - b.date) || []
@@ -119,6 +149,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                     setMessages([...messages.filter((item) => item.ChatID !== payload.new.ChatID),
                     { message: newMessages, ChatID: payload.new.ChatID }
                     ])
+
                 }
             )
             .on('postgres_changes', {
@@ -162,34 +193,11 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
             )
             .subscribe()
 
-
-        Promise.all(chats.map(async (chat) => {
-            const { data, error }: { data: Adverts[] | null, error: any } = await supabase
-                .from('adverts')
-                .select()
-                .eq('id', chat.AdvertID)
-
-            if (data) {
-                const advertInfo = data?.[0]
-                const dataUrl = await supabase
-                    .storage
-                    .from("images")
-                    .createSignedUrl(data?.[0]?.imgPath || '', 120)
-
-                if (advertInfo) advertInfo.imgPath = dataUrl.data?.signedUrl || ''
-                return { Advert: advertInfo, ChatID: chat.ChatID }
-            }
-            else return { Advert: null, ChatID: chat.ChatID }
-
-        })).then((response) => {
-            if (JSON.stringify(response) !== JSON.stringify(chatsInfo)) setChatsInfo(response.reverse())
-        })
-
         return () => {
             supabase.removeChannel(channel)
         }
 
-    }, [])
+    }, [messages])
 
 
     const onSubmit: SubmitHandler<Message> = async (formData) => {
@@ -217,6 +225,9 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
             <div className="chat">
                 <div className="chat__aside">
                     {chatsInfo?.map((info, id) => {
+
+                        const lastMessage = messages.find(item => item.ChatID === info.ChatID)?.message.slice(-1)[0]
+
                         return (
                             <button
                                 onClick={() => {
@@ -248,7 +259,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                                     />
                                 }
                                 <h3 className="chat__aside-title">{info.Advert?.title}</h3>
-                                {/* <p className="chat__aside-subtitle">{info?.messages?.[-1]?.message}ываыва</p> */}
+                                <p className="chat__aside-subtitle">{lastMessage?.message}</p>
                             </button>)
                     })}
 
@@ -287,12 +298,20 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                     <div className="chat__main-messages">
                         {
                             messages?.find(msgInfo => msgInfo.ChatID === activeChat?.ChatID)?.message.map((item, id) => {
+                                console.log(item);
+                                const messageDate = new Date(item.date)
                                 return (
                                     <div ref={scrollChatRef} key={id} className={item.from === session?.user.id
                                         ? "chat__main-msg chat__main-msg--left"
                                         : "chat__main-msg chat__main-msg--right"
                                     }>
-                                        {item.message}
+                                        <p className="chat__message">
+                                            {item.message}
+                                        </p>
+
+                                        <p className="chat__message-time">
+                                            {`${messageDate.getDay()}/${messageDate.getMonth()}/${messageDate.getFullYear()} ${messageDate.getMinutes()}:${messageDate.getHours()}`}
+                                        </p>
                                     </div>
                                 )
                             })}

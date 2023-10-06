@@ -15,24 +15,24 @@
 }
 
 .advert__error-link {
+    margin-top: 50px;
+    position: relative;
     font-size: 24px;
 }
 
 .advert__error-link-arrow {
+    top: 50%;
+    transform: translateY(-50%);
     transition: all .3s;
     position: absolute;
-    right: -15px;
+    right: -35px;
     width: 30px;
     fill: var(--shadowcolor);
 }
 
-.advert__error-link-arrow {
-    margin-top: 50px;
-    position: relative;
-}
 
 .advert__error-link:hover .advert__error-link-arrow {
-    right: -25px;
+    right: -45px;
     fill: #0083ff;
 }
 

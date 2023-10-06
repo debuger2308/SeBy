@@ -41,7 +41,9 @@ const Chat = async () => {
 
     return (
         <main>
-            <UserChat session={session} chats={chats || []} additionalChat={additionalChat || []} />
+            <div className="container">
+                <UserChat session={session} chats={chats || []} additionalChat={additionalChat || []} />
+            </div>
         </main>
     );
 }

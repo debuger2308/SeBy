@@ -311,8 +311,7 @@ const NewAdvert = () => {
                                 className='newadvert__form-input'
                                 placeholder='Опис'
                                 {...register('subtitle', {
-                                    maxLength: { value: 350, message: "максимум 350 симолiв" },
-                                    required: true
+                                    maxLength: { value: 350, message: "максимум 350 симолiв" }
                                 })}
                                 type="text"
                             />

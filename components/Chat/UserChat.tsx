@@ -80,6 +80,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
     const [chatsInfo, setChatsInfo] = useState<AdvertInfo[]>([])
 
+    const [isLoadingChats, setIsLoadingChats] = useState(true)
 
     const [isActiveChatMenu, setIsActiveChatMenu] = useState(true)
 
@@ -110,6 +111,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
         })).then((response) => {
             setChatsInfo(response.reverse())
+            setIsLoadingChats(false)
         })
     }, [])
 
@@ -230,7 +232,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
 
     return (
         <div className="main__chat">
-            {chatsInfo.length === 0 ?
+            {chatsInfo.length === 0 && !isLoadingChats ?
                 <>
                     <h1 className="chat__empty-message">У вас немає активних чатів</h1>
                     <Link href="/" className="chat__empty-link">
@@ -356,6 +358,12 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                             {
                                 messages?.find(msgInfo => msgInfo.ChatID === activeChat?.ChatID)?.message.map((item, id) => {
                                     const messageDate = new Date(item.date)
+                                    const DateDay = messageDate.getDate() < 10 ? "0" + messageDate.getDate() : messageDate.getDate()
+                                    const DateMonth = messageDate.getMonth() + 1 < 10 ? "0" + messageDate.getMonth() + 1: messageDate.getMonth() + 1
+                                    const DateYear = messageDate.getFullYear()
+                                    const DateHours = messageDate.getHours() < 10 ? "0" + messageDate.getHours() : messageDate.getHours()
+                                    console.log(DateHours);
+                                    const DateMin = messageDate.getMinutes() < 10 ? "0" + messageDate.getMinutes() : messageDate.getMinutes()
                                     return (
                                         <div ref={scrollChatRef} key={id} className={item.from === session?.user.id
                                             ? "chat__main-msg chat__main-msg--left"
@@ -368,7 +376,7 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                                             </p>
 
                                             <p className="chat__message-time">
-                                                {`${messageDate.getDay() + 1}/${messageDate.getMonth() + 1}/${messageDate.getFullYear()} ${messageDate.getHours()}:${messageDate.getMinutes()}`}
+                                                {`${DateDay}/${DateMonth}/${DateYear} ${DateHours}:${DateMin}`}
                                             </p>
                                         </div>
                                     )

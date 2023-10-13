@@ -2,7 +2,8 @@
 
 .categories {
     position: relative;
-    width: 260px;
+    width: 270px;
+    grid-area: category;
 }
 
 
@@ -23,10 +24,14 @@
 
 
 .categories-list {
-    
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    background-color: var(--maincolor);
 }
-.categories-list__item {
-}
+
+
+
 .categories-list__btn {
     word-wrap: break-word;
     font-size: 18px;

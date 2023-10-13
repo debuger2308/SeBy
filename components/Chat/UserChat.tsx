@@ -362,7 +362,6 @@ const UserChat = ({ session, chats, additionalChat }: { session: Session | null,
                                     const DateMonth = messageDate.getMonth() + 1 < 10 ? "0" + messageDate.getMonth() + 1: messageDate.getMonth() + 1
                                     const DateYear = messageDate.getFullYear()
                                     const DateHours = messageDate.getHours() < 10 ? "0" + messageDate.getHours() : messageDate.getHours()
-                                    console.log(DateHours);
                                     const DateMin = messageDate.getMinutes() < 10 ? "0" + messageDate.getMinutes() : messageDate.getMinutes()
                                     return (
                                         <div ref={scrollChatRef} key={id} className={item.from === session?.user.id

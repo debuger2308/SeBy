@@ -8,6 +8,8 @@ import "./global.css"
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
+
+
 const nunito = Nunito({ subsets: ['latin'] })
 
 export const dynamic = 'force-dynamic'
@@ -27,6 +29,13 @@ export default async function RootLayout({
     const {
         data: { session },
     } = await supabase.auth.getSession()
+
+
+    
+
+    
+
+
     return (
         <html lang='en'>
             <body style={nunito.style}>

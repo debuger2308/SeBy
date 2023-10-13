@@ -90,7 +90,7 @@ const Advert = async ({ params: { id } }: Props) => {
                                         alt="нема фото"
                                         className="advert__img"
                                         src='/images/noImage.png'
-                                        style={{ objectFit: "fill" }}
+                                        style={{ objectFit: "cover" }}
                                         fill
                                     />
                                 }

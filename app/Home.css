@@ -1,0 +1,47 @@
+.main__mainpage {
+    display: flex;
+}
+
+
+.mainpage__header {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mainpage__catalog{
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 270px);
+    gap: 30px;
+    justify-content: center;
+}
+
+
+
+
+@media (max-width:960px) {
+    .mainpage__header {
+        margin: 0 auto;
+        width: auto;
+        display: grid;
+        grid-template-areas:
+            "category rangeinput"
+            "searchinput searchinput"
+        ;
+        margin-top: 30px;
+    }
+}
+@media (max-width:640px) {
+    .mainpage__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+    }
+    
+}

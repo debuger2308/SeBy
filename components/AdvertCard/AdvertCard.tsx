@@ -35,13 +35,13 @@ const AdvertCard = ({ advert }: { advert: Adverts }) => {
     }, [])
 
     return (
-        <div className="advert-card">
+        <div className="catalog-card">
 
 
-                <Link href={'/' + advert.id} className="advert-card__link">
+                <Link href={'/' + advert.id} className="catalog-card__link">
                     {dataUrl === "null" && dataUrl.length !== 0 
                         ? <Image
-                            className="advert-card__img"
+                            className="catalog-card__img"
                             width={250}
                             height={250}
                             src="/images/noImage.png"
@@ -49,7 +49,7 @@ const AdvertCard = ({ advert }: { advert: Adverts }) => {
                             style={{ objectFit: "cover" }}
                         />
                         : <Image
-                            className="advert-card__img"
+                            className="catalog-card__img"
                             width={250}
                             height={250}
                             src={dataUrl || '/'}
@@ -61,9 +61,9 @@ const AdvertCard = ({ advert }: { advert: Adverts }) => {
 
 
 
-                <h2 className="advert-card__title">{advert.title}</h2>
-                <strong className="advert-card__price">{advert.price}₴</strong>
-                <p className="advert-card__city">{advert.city}</p>
+                <h2 className="catalog-card__title">{advert.title}</h2>
+                <strong className="catalog-card__price">{advert.price}₴</strong>
+                <p className="catalog-card__city">{advert.city}</p>
  
 
         </div>

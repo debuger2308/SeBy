@@ -1,4 +1,4 @@
-.advert-card {
+.catalog-card {
     width: 270px;
     padding: 20px 10px;
     border: 1px solid var(--shadowcolor);
@@ -9,21 +9,21 @@
     grid-template-areas: "image image" "title title" "price city";
     transition: border .3s;
 }
-.advert-card:hover {
+.catalog-card:hover {
     border: 1px solid #0083ff;
 }
 
-.advert-card__link {
+.catalog-card__link {
     grid-area: image;
 }
 
-.advert-card__img {
+.catalog-card__img {
     border-radius: 10px;
 }
 
 
 
-.advert-card__title {
+.catalog-card__title {
     margin-bottom: auto;
     font-size: 24px;
     color: var(--foreground);
@@ -31,13 +31,13 @@
     word-wrap: break-word;
 }
 
-.advert-card__price {
+.catalog-card__price {
     font-size: 20px;
     grid-area: price;
     margin-top: auto;
 }
 
-.advert-card__city {
+.catalog-card__city {
     font-size: 20px;
     margin-top: auto;
     text-align: right;

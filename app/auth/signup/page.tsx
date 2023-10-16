@@ -4,8 +4,6 @@ import "./signup.css"
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from "next/navigation";
-
 
 type FormValues = {
     email: string,
@@ -17,7 +15,6 @@ const SighUp = () => {
     const [isLoadData, setIsLoadData] = useState(false)
     const [accessMsg, setAccessMsg] = useState(false)
     const [isUserExist, setIsUserExist] = useState(false)
-    const router = useRouter()
 
     const {
         register,
@@ -28,17 +25,19 @@ const SighUp = () => {
         },
         watch,
     } = useForm<FormValues>({ mode: "onBlur" })
-    console.log(location);
+
     const supabase = createClientComponentClient()
 
     const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+        console.log(location.origin);
+        console.log(location);
         setIsLoadData(true)
         clearMsgsHandler()
         const { data, error } = await supabase.auth.signUp({
             email: formData.email,
             password: formData.password,
             options: {
-                emailRedirectTo: `${location.origin}/auth/callback`,
+                emailRedirectTo: `${location.origin}/auth/login`,
             },
         })
         if (data.user && data.user.identities && data.user.identities.length === 0) {

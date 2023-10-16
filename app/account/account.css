@@ -1,0 +1,21 @@
+
+.main__account{
+    text-align: center;
+}
+.account__title{
+    font-size: 28px;
+    margin-top: 50px;
+}
+
+
+.account__exit-btn{
+    margin-top: 20px;
+    font-size: 24px;
+    padding: 5px 10px;
+    background-color: unset;
+    border: 2px solid var(--shadowcolor);
+    transition: all .3s;
+}
+.account__exit-btn:hover{
+    border: 2px solid #0083ff;
+}

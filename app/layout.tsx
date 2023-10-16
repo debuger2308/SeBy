@@ -30,12 +30,6 @@ export default async function RootLayout({
         data: { session },
     } = await supabase.auth.getSession()
 
-
-    
-
-    
-
-
     return (
         <html lang='en'>
             <body style={nunito.style}>

@@ -73,3 +73,9 @@ main {
 .loader--active {
     display: block;
 }
+
+@media (max-width:340px) {
+    .container{
+        padding: 0 5px;
+    }
+}

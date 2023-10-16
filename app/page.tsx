@@ -7,6 +7,7 @@ import "./Home.css"
 import SearchInput from "@/components/SearchInput/SearchInput";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import AdvertCard from "@/components/AdvertCard/AdvertCard";
+import PaginationControl from "@/components/PaginationControl/PaginationControl";
 
 type Adverts = {
     id: number
@@ -39,7 +40,11 @@ export default function Home() {
     const [filteredAdverts, setFilteredAdverts] = useState<Adverts[]>([])
     const [resultAdvertList, setResultAdvertList] = useState<Adverts[]>([])
 
-    // const [paginPoint, setPaginPoinit] = useState(0)
+    const [paginPoint, setPaginPoinit] = useState(1)
+
+    const [isUploadingData, setIsUploadingData] = useState(true)
+
+    const quntDisplayCards = 12
 
 
     function filterByCategory(adverts: Adverts[]) {
@@ -58,20 +63,21 @@ export default function Home() {
 
 
     useEffect(() => {
+        setIsUploadingData(true)
         const getAdverts = async () => {
             let { data: adverts, error }: { data: Adverts[] | null, error: any } = await supabase
                 .from('adverts')
                 .select('*')
-            if (adverts) setAdverts(adverts.reverse() || [])
+            if (adverts) {
+                setFilteredAdverts(adverts)
+                setAdverts(adverts.reverse() || []) 
+            }
+            setIsUploadingData(false)
         }
         getAdverts()
-
+        
     }, [])
 
-    useEffect(() => {
-
-        setFilteredAdverts(adverts)
-    }, [adverts])
 
     useEffect(() => {
         if (filteredAdverts.length === 1) {
@@ -114,20 +120,28 @@ export default function Home() {
 
                         <SearchInput setSearchTerm={setSearchTerm} />
                     </div>
-                </div>
-                <div className="mainpage__catalog">
-                    {resultAdvertList.length !== 0 &&
-                        resultAdvertList.map((item) => {
-                            return <AdvertCard advert={item} key={item.id} />
-                        })
+
+                    {resultAdvertList.length === 0 && !isUploadingData
+                        ? <h1 className="zero-cards-title">Оголошень не знайдено</h1>
+
+
+                        : <div className="mainpage__catalog">
+                            {resultAdvertList.length !== 0 &&
+                                resultAdvertList.slice((paginPoint - 1) * quntDisplayCards, paginPoint * quntDisplayCards).map((item) => {
+                                    return <AdvertCard advert={item} key={item.id} />
+                                })
+                            }
+
+                        </div>
                     }
 
+                    <PaginationControl
+                        pointQuantity={Math.ceil(resultAdvertList.length / quntDisplayCards)}
+                        paginPoint={paginPoint}
+                        setPaginPoinit={setPaginPoinit}
+                    />
+
                 </div>
-                {/* <button onClick={() => {
-                    setPaginPoinit(point => point + 1)
-                }}>
-                    Click
-                </button> */}
             </div>
         </main>
     )

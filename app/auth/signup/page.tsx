@@ -16,6 +16,7 @@ const SighUp = () => {
     const [accessMsg, setAccessMsg] = useState(false)
     const [isUserExist, setIsUserExist] = useState(false)
 
+
     const {
         register,
         handleSubmit,
@@ -29,15 +30,13 @@ const SighUp = () => {
     const supabase = createClientComponentClient()
 
     const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-        console.log(location.origin);
-        console.log(location);
         setIsLoadData(true)
         clearMsgsHandler()
         const { data, error } = await supabase.auth.signUp({
             email: formData.email,
             password: formData.password,
             options: {
-                emailRedirectTo: `${location.origin}/auth/login`,
+                emailRedirectTo: `${location.origin}/auth/callback`,
             },
         })
         if (data.user && data.user.identities && data.user.identities.length === 0) {

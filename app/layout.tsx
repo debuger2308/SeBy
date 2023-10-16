@@ -1,6 +1,7 @@
 
 import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import { Providers } from './providers'
 import Header from '@/components/Header/Header'
 import "./reset.css"
@@ -10,7 +11,7 @@ import { cookies } from 'next/headers'
 
 
 
-const nunito = Nunito({ subsets: ['latin'] })
+const nunito = Montserrat({ subsets: ['latin']})
 
 export const dynamic = 'force-dynamic'
 
